@@ -51,7 +51,7 @@ npm run build
 Create a `knowledgegraph` code block in your notes:
 
 ```
-\`\`\`knowledgegraph
+```knowledgegraph
 ---
 name: My Knowledge Graph
 description: |
@@ -68,7 +68,7 @@ height: 500
 Zhang, colleague, Li
 Zhang, boss, Wang
 Google DeepMind, acquired, Isomorphic Labs
-\`\`\`
+```
 ```
 
 ### Triple Format
