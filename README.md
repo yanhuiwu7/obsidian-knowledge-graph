@@ -50,7 +50,6 @@ npm run build
 
 Create a `knowledgegraph` code block in your notes:
 
-```
 ```knowledgegraph
 ---
 name: My Knowledge Graph
@@ -69,7 +68,6 @@ Zhang, colleague, Li
 Zhang, boss, Wang
 Google DeepMind, acquired, Isomorphic Labs
 ```
-```
 
 ### Triple Format
 
@@ -82,7 +80,7 @@ Department, contains, Person
 ```
 
 - `subject` and `object` are automatically created as nodes
-- `predicate` is displayed as the relationship label
+- `predicate` is displayed as relationship label
 - Lines starting with `#` are comments and will be ignored
 
 ### Self-Referential Nodes
@@ -142,7 +140,6 @@ Nodes not covered by any type will be auto-assigned colors.
 
 ### Organization Chart
 
-```
 ```knowledgegraph
 ---
 name: Organization Structure
@@ -161,10 +158,9 @@ VP, oversees, Marketing Dept
 Tech Dept, contains, Frontend Team
 Tech Dept, contains, Backend Team
 ```
-```
 
 ### Concept Graph
-```
+
 ```knowledgegraph
 ---
 name: Frontend Tech Stack
@@ -181,13 +177,12 @@ React, bundles with, Vite
 Vue, uses, TypeScript
 TypeScript, linted by, ESLint
 ```
-```
 
 ## Configuration
 
 In **Settings → Knowledge Graph Viz** you can configure:
 
-- **Show Node Labels**: Whether to display node names by default (doesn't affect hover tooltip)
+- **Show Node Labels**: Whether to display node names by default (doesn't affect hover tooltips)
 
 ## Tech Stack
 
