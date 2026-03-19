@@ -50,7 +50,8 @@ npm run build
 
 Create a `knowledgegraph` code block in your notes:
 
-```knowledgegraph
+```
+\`\`\`knowledgegraph
 ---
 name: My Knowledge Graph
 description: |
@@ -67,6 +68,7 @@ height: 500
 Zhang, colleague, Li
 Zhang, boss, Wang
 Google DeepMind, acquired, Isomorphic Labs
+\`\`\`
 ```
 
 ### Triple Format
@@ -140,7 +142,8 @@ Nodes not covered by any type will be auto-assigned colors.
 
 ### Organization Chart
 
-```knowledgegraph
+```
+\`\`\`knowledgegraph
 ---
 name: Organization Structure
 description: |
@@ -157,6 +160,7 @@ VP, oversees, Tech Dept
 VP, oversees, Marketing Dept
 Tech Dept, contains, Frontend Team
 Tech Dept, contains, Backend Team
+\`\`\`
 ```
 
 ### Concept Graph
