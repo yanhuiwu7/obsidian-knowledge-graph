@@ -143,7 +143,7 @@ Nodes not covered by any type will be auto-assigned colors.
 ### Organization Chart
 
 ```
-\`\`\`knowledgegraph
+```knowledgegraph
 ---
 name: Organization Structure
 description: |
@@ -160,11 +160,11 @@ VP, oversees, Tech Dept
 VP, oversees, Marketing Dept
 Tech Dept, contains, Frontend Team
 Tech Dept, contains, Backend Team
-\`\`\`
+```
 ```
 
 ### Concept Graph
-
+```
 ```knowledgegraph
 ---
 name: Frontend Tech Stack
@@ -180,6 +180,7 @@ React, bundles with, Webpack
 React, bundles with, Vite
 Vue, uses, TypeScript
 TypeScript, linted by, ESLint
+```
 ```
 
 ## Configuration
