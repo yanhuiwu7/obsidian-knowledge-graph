@@ -1,0 +1,10 @@
+{
+  "id": "knowledge-graph-viz",
+  "name": "Knowledge Graph Viz",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Interactive knowledge graph visualization based on Markdown code blocks, supporting custom node types, relationships, colors, and descriptions.",
+  "author": "yanhuiwu7",
+  "authorUrl": "https://github.com/yanhuiwu7",
+  "isDesktopOnly": false
+}
