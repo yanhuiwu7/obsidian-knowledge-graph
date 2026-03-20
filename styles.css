@@ -92,9 +92,11 @@
   box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   z-index: 1000;
 }
-.kg-tooltip.visible { opacity: 1; }
-.kg-tooltip strong  { color: var(--text-accent); }
-.kg-tt-type         { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.kg-tooltip.visible   { opacity: 1; }
+/* measuring phase: placed in DOM but invisible so we can read offsetWidth/Height */
+.kg-tooltip.measuring { opacity: 0; visibility: hidden; }
+.kg-tooltip strong    { color: var(--text-accent); }
+.kg-tt-type           { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
 /* ── Toolbar ── */
 .kg-cb-toolbar {

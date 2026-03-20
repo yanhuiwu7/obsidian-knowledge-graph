@@ -59,9 +59,13 @@ description: |
 height: 500
 ---
 
-# Node Types
-@type Core Member #6366f1 Zhang, Li
-@type External Consultant #f59e0b Wang
+types:
+  - label: Core Member
+    color: #6366f1
+    nodes: [Zhang, Li]
+  - label: External Consultant
+    color: #f59e0b
+    nodes: [Wang]
 
 # Triples (comma separated: subject, predicate, object)
 Zhang, colleague, Li
@@ -93,23 +97,30 @@ Role, multi-level, Role
 
 ### Node Types
 
-Use `@type` directive to define node types:
+**Recommended**: Use YAML style for better readability and extensibility:
+
+```
+types:
+  - label: Core Member
+    color: #6366f1
+    nodes: [Zhang, Li]
+  - label: External Consultant
+    color: #f59e0b
+    nodes: [Wang]
+  - label: Project
+    color: #10b981
+    nodes: [Alpha, Beta, Gamma]
+```
+
+**Legacy**: `@type` directive is still supported:
 
 ```
 @type TypeName [#color] Node1, Node2, ...
 ```
 
-Example:
-
-```
-@type Core Member #6366f1 Zhang, Li
-@type External Consultant #f59e0b Wang
-@type Project #10b981 Alpha, Beta, Gamma
-```
-
-- `TypeName`: Label shown in legend
-- `#color`: Optional, auto-assigned if not specified
-- `Node list`: Comma-separated node names
+- `label` / `TypeName`: Label shown in legend
+- `color`: Optional, auto-assigned if not specified
+- `nodes` / `Node list`: Array of node names (YAML) or comma-separated (legacy)
 
 Nodes not covered by any type will be auto-assigned colors.
 
@@ -148,9 +159,16 @@ description: |
   Shows hierarchical relationships between departments
 ---
 
-@type Executive #6366f1 CEO, VP
-@type Department #f59e0b Tech Dept, Marketing Dept, Ops Dept
-@type Team #10b981 Frontend Team, Backend Team
+types:
+  - label: Executive
+    color: #6366f1
+    nodes: [CEO, VP]
+  - label: Department
+    color: #f59e0b
+    nodes: [Tech Dept, Marketing Dept, Ops Dept]
+  - label: Team
+    color: #10b981
+    nodes: [Frontend Team, Backend Team]
 
 CEO, leads, VP
 VP, oversees, Tech Dept
@@ -167,9 +185,16 @@ name: Frontend Tech Stack
 height: 450
 ---
 
-@type Framework #3b82f6 React, Vue, Angular
-@type Build Tool #ef4444 Webpack, Vite, Rollup
-@type Utility #10b981 TypeScript, ESLint, Prettier
+types:
+  - label: Framework
+    color: #3b82f6
+    nodes: [React, Vue, Angular]
+  - label: Build Tool
+    color: #ef4444
+    nodes: [Webpack, Vite, Rollup]
+  - label: Utility
+    color: #10b981
+    nodes: [TypeScript, ESLint, Prettier]
 
 React, uses, TypeScript
 React, bundles with, Webpack

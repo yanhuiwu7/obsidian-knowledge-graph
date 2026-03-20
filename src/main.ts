@@ -17,7 +17,7 @@ export default class KnowledgeGraphPlugin extends Plugin {
       async (source: string, el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
         const component = new Component();
         component.load();
-        ctx.addChild(component as any);
+        ctx.addChild(component);
         const renderer = new CodeBlockRenderer(this.app, component);
         await renderer.render(source, el, ctx);
       }
@@ -28,14 +28,14 @@ export default class KnowledgeGraphPlugin extends Plugin {
   }
 
   onunload() {
-    // Cleanup if needed
+    // Nothing to clean up
   }
 
   // ============================================
   // Settings
   // ============================================
   async loadSettings() {
-    const saved = await this.loadData();
+    const saved = await this.loadData() as Partial<PluginSettings>;
     this.settings = Object.assign({}, DEFAULT_SETTINGS, saved);
   }
 

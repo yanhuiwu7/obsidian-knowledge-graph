@@ -1,26 +1,18 @@
+import * as yaml from "js-yaml";
 import { GraphConfig, NodeTypeConfig, Triple } from "./types";
 
 // ============================================
 // Code block syntax parser
-// Supported format:
+// Supported formats:
 //
-// ```knowledgegraph
-// ---
-// name: Graph Name
-// description: |
-//   ## Description
-//   Multi-line Markdown description
-// ---
+// 1. Legacy @type style:
+// @type TypeName [#color] node1, node2
 //
-// # Node Types
-// @type Core Member #6366f1 Zhang, Li
-// @type External Consultant #f59e0b Wang
-//
-// # Triples (comma separated: subject, predicate, object)
-// Zhang, colleague, Li
-// Zhang, boss, Wang
-// Google DeepMind, acquired, Isomorphic Labs
-// ```
+// 2. YAML style (recommended):
+// types:
+//   - label: 组织
+//     color: #6366f1
+//     nodes: [分部, 部门, 职务]
 // ============================================
 
 export interface ParseResult {
@@ -74,7 +66,19 @@ export function parseCodeBlock(source: string): ParseResult {
     // Skip empty lines and comments
     if (!trimmed || trimmed.startsWith("#")) continue;
 
-    // @type node type definition
+    // types: (YAML block start)
+    if (trimmed.startsWith("types:") || trimmed.startsWith("types :")) {
+      const yamlResult = parseYamlTypesBlock(lines, i, typeColorIdx, autoColors);
+      errors.push(...yamlResult.errors);
+      if (yamlResult.nodeTypes) {
+        nodeTypes.push(...yamlResult.nodeTypes);
+        typeColorIdx += yamlResult.nodeTypes.length;
+      }
+      i = yamlResult.endIndex; // Skip to end of YAML block
+      continue;
+    }
+
+    // @type node type definition (legacy)
     if (trimmed.startsWith("@type ")) {
       const typeResult = parseTypeDirective(trimmed, typeColorIdx, autoColors);
       if (typeResult.error) {
@@ -112,7 +116,111 @@ export function parseCodeBlock(source: string): ParseResult {
 }
 
 // ============================================
-// Parse @type directive
+// Parse YAML types block
+// Format:
+// types:
+//   - label: 组织
+//     color: #6366f1
+//     nodes: [分部, 部门, 职务]
+//   - label: 属性
+//     color: #f59e0b
+//     nodes: [主身份, 次身份]
+// ============================================
+function parseYamlTypesBlock(
+  lines: string[],
+  startIndex: number,
+  baseColorIdx: number,
+  autoColors: string[]
+): { nodeTypes?: NodeTypeConfig[]; errors: string[]; endIndex: number } {
+  const errors: string[] = [];
+  const nodeTypes: NodeTypeConfig[] = [];
+
+  // Collect YAML block lines (must be indented and not empty/comment)
+  const yamlLines: string[] = [];
+  let i = startIndex + 1;
+  let hasContent = false;
+
+  for (; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+
+    // Stop if we hit a non-indented line (end of YAML block)
+    if (trimmed && !line.startsWith("\t") && !line.startsWith(" ") && !trimmed.startsWith("#")) {
+      break;
+    }
+
+    // Skip empty lines and comments within the block
+    if (!trimmed || trimmed.startsWith("#")) continue;
+
+    yamlLines.push(line);
+    hasContent = true;
+  }
+
+  if (!hasContent) {
+    return { errors: [`Line ${startIndex + 1}: types: block is empty`], endIndex: i };
+  }
+
+  try {
+    // Parse YAML (allow trailing comma in arrays)
+    const raw = yamlLines.join("\n");
+    const normalized = raw.replace(/,(\s*[\]}\]])/g, "$1"); // Remove trailing commas before brackets
+    const parsed = yaml.load(normalized);
+
+    if (!parsed || typeof parsed !== "object") {
+      throw new Error("types: block must be a YAML list");
+    }
+
+    const typesList = parsed as unknown[];
+    if (!Array.isArray(typesList)) {
+      throw new Error("types: must be a YAML array starting with '- '");
+    }
+
+    let colorIdx = baseColorIdx;
+    for (const item of typesList) {
+      if (!item || typeof item !== "object") {
+        errors.push(`Invalid type entry: must be an object`);
+        continue;
+      }
+
+      const entry = item as Record<string, unknown>;
+      const labelRaw = entry.label ?? "";
+      const label = typeof labelRaw === "string" ? labelRaw : "";
+      const colorRaw = entry.color;
+      const color = typeof colorRaw === "string" ? colorRaw : autoColors[colorIdx % autoColors.length];
+
+      // Parse nodes (can be array or comma-separated string)
+      let nodes: string[] = [];
+      if (entry.nodes) {
+        if (Array.isArray(entry.nodes)) {
+          nodes = entry.nodes.map((n) => String(n)).filter(Boolean);
+        } else if (typeof entry.nodes === "string") {
+          nodes = String(entry.nodes).split(",").map((s) => s.trim()).filter(Boolean);
+        }
+      }
+
+      if (!label) {
+        errors.push(`Type entry missing required field: label`);
+        continue;
+      }
+
+      nodeTypes.push({
+        id: `type_${label}_${colorIdx}`,
+        label,
+        color,
+        nodes,
+      });
+      colorIdx++;
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    errors.push(`Line ${startIndex + 1}: Failed to parse types: block - ${msg}`);
+  }
+
+  return { nodeTypes, errors, endIndex: i };
+}
+
+// ============================================
+// Parse @type directive (legacy, still supported)
 // Format: @type TypeName [#color] node1, node2, ...
 // ============================================
 function parseTypeDirective(
@@ -194,7 +302,7 @@ function parseFrontmatter(lines: string[]): Record<string, string> {
         currentVal = isMultiline ? [] : [val];
       } else {
         // Remove one-level indentation (2 spaces or 1 tab)
-        currentVal.push(line.replace(/^  |\t/, ""));
+        currentVal.push(line.replace(/^ {2}|\t/, ""));
       }
     }
   }
@@ -205,6 +313,7 @@ function parseFrontmatter(lines: string[]): Record<string, string> {
 
 // ============================================
 // Serialize: GraphConfig → code block text
+// Preference: use YAML style for types if any exist
 // ============================================
 export function serializeToCodeBlock(config: GraphConfig): string {
   const lines: string[] = [];
@@ -222,12 +331,16 @@ export function serializeToCodeBlock(config: GraphConfig): string {
   lines.push("---");
   lines.push("");
 
-  // Node types
+  // Node types (prefer YAML style if any types exist)
   if (config.nodeTypes.length > 0) {
-    lines.push("# Node Types");
+    lines.push("types:");
     config.nodeTypes.forEach((t) => {
-      const nodesStr = (t.nodes ?? []).join(", ");
-      lines.push(`@type ${t.label} ${t.color ?? ""} ${nodesStr}`.trimEnd());
+      const nodesArray = (t.nodes ?? []).map((n) => n.includes(",") ? `"${n}"` : n).join(", ");
+      lines.push(`  - label: ${t.label}`);
+      if (t.color) lines.push(`    color: ${t.color}`);
+      if (t.nodes && t.nodes.length > 0) {
+        lines.push(`    nodes: [${nodesArray}]`);
+      }
     });
     lines.push("");
   }

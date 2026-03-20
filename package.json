@@ -7,14 +7,26 @@
     "dev": "node esbuild.config.mjs",
     "build": "node esbuild.config.mjs production"
   },
-  "keywords": ["obsidian", "knowledge-graph", "d3"],
+  "keywords": [
+    "obsidian",
+    "knowledge-graph",
+    "d3"
+  ],
   "license": "MIT",
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.57.1",
+    "@typescript-eslint/parser": "^8.57.1",
     "builtin-modules": "^3.3.0",
     "esbuild": "^0.20.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-obsidianmd": "^0.1.9",
     "obsidian": "latest",
     "tslib": "2.6.0",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1"
   }
 }

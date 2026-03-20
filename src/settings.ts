@@ -12,7 +12,10 @@ export class KnowledgeGraphSettingTab extends PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "Knowledge Graph Settings" });
+
+    new Setting(containerEl)
+      .setName("Graph viz")
+      .setHeading();
 
     containerEl.createEl("p", {
       text: "Now supports defining and previewing knowledge graphs directly in Markdown files using ```knowledgegraph code blocks. Simply write triple relations with the specified syntax in the code block.",
@@ -20,7 +23,7 @@ export class KnowledgeGraphSettingTab extends PluginSettingTab {
     });
 
     new Setting(containerEl)
-      .setName("Show Node Labels")
+      .setName("Show node labels")
       .setDesc("Display or hide node name labels in the graph")
       .addToggle((toggle) =>
         toggle
