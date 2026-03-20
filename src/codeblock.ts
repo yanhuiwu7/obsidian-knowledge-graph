@@ -135,7 +135,7 @@ export class CodeBlockRenderer {
     // Show parse errors (don't block rendering)
     if (errors.length > 0) {
       const errBox = container.createDiv({ cls: "kg-cb-errors" });
-    errBox.createEl("strong", { text: "⚠ Syntax hints" });
+    errBox.createEl("strong", { text: "Syntax hints" });
       errors.forEach((e) => errBox.createEl("div", { text: e, cls: "kg-cb-error-item" }));
     }
 
@@ -175,9 +175,9 @@ export class CodeBlockRenderer {
     const toolbar = graphWrap.createDiv({ cls: "kg-cb-toolbar" });
     toolbar.createEl("span", { cls: "kg-cb-title", text: config.name });
     const btnRow    = toolbar.createDiv({ cls: "kg-cb-btn-row" });
-    const btnFit    = btnRow.createEl("button", { cls: "kg-cb-btn", text: "⊙ Fit" });
-    const btnLabel  = btnRow.createEl("button", { cls: "kg-cb-btn", text: "⊘ Label" });
-    const btnLayout = btnRow.createEl("button", { cls: "kg-cb-btn", text: "↺ Restart" });
+    const btnFit    = btnRow.createEl("button", { cls: "kg-cb-btn", text: "Fit" });
+    const btnLabel  = btnRow.createEl("button", { cls: "kg-cb-btn", text: "Label" });
+    const btnLayout = btnRow.createEl("button", { cls: "kg-cb-btn", text: "Restart" });
 
     // Canvas area (adjustable height)
     const canvasWrap = graphWrap.createDiv({ cls: "kg-cb-canvas-wrap" });
@@ -286,7 +286,7 @@ export class CodeBlockRenderer {
     btnLabel.addEventListener("click", () => {
       labelsVisible = !labelsVisible;
       renderer.setLabelsVisible(labelsVisible);
-      btnLabel.textContent = labelsVisible ? "⊘ Label" : "◎ Label";
+      btnLabel.textContent = labelsVisible ? "Hide labels" : "Show labels";
     });
 
     // Re-fit view on resize
