@@ -4,7 +4,7 @@
 
 If you discover a security vulnerability, please do not open a public issue.
 
-Please send an email directly to: your-email@example.com
+Please send an email directly to: yanhuiwu7@163.com
 
 Include the following:
 - Description of the vulnerability
