@@ -135,7 +135,7 @@ export class CodeBlockRenderer {
     // Show parse errors (don't block rendering)
     if (errors.length > 0) {
       const errBox = container.createDiv({ cls: "kg-cb-errors" });
-    errBox.createEl("strong", { text: "⚠ Syntax hints" }); // eslint-disable-line obsidianmd/ui/sentence-case
+    errBox.createEl("strong", { text: "⚠ Syntax hints" });
       errors.forEach((e) => errBox.createEl("div", { text: e, cls: "kg-cb-error-item" }));
     }
 
@@ -175,11 +175,8 @@ export class CodeBlockRenderer {
     const toolbar = graphWrap.createDiv({ cls: "kg-cb-toolbar" });
     toolbar.createEl("span", { cls: "kg-cb-title", text: config.name });
     const btnRow    = toolbar.createDiv({ cls: "kg-cb-btn-row" });
-    // eslint-disable-next-line obsidianmd/ui/sentence-case
     const btnFit    = btnRow.createEl("button", { cls: "kg-cb-btn", text: "⊙ Fit" });
-    // eslint-disable-next-line obsidianmd/ui/sentence-case
     const btnLabel  = btnRow.createEl("button", { cls: "kg-cb-btn", text: "⊘ Label" });
-    // eslint-disable-next-line obsidianmd/ui/sentence-case
     const btnLayout = btnRow.createEl("button", { cls: "kg-cb-btn", text: "↺ Restart" });
 
     // Canvas area (adjustable height)
@@ -251,8 +248,7 @@ export class CodeBlockRenderer {
     heightInput.min   = String(MIN_H);
     heightInput.max   = String(MAX_H);
     heightInput.value = String(initH);
-    // eslint-disable-next-line obsidianmd/ui/sentence-case
-    heightInput.title = "Enter height (px) and press Enter to confirm";
+    heightInput.title = "Enter height (px) and press enter to confirm";
 
     // Expose input apply logic to resize handle (via shared reference)
     const applyHeightFromInput = (h: number) => {
